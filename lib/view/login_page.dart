@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      backgroundColor: const Color.fromARGB(255, 33, 201, 243),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -62,18 +62,22 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.person, size: 80, color: Colors.blue),
+                  Icon(Icons.person, size: 80, color: Colors.white),
                   SizedBox(height: 24),
                   Text(
-                    'Login User',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    'Login Admin',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: Icon(Icons.email, color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -88,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: Icon(Icons.lock, color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -119,7 +123,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(color: Colors.white)
-                          : Text('Login', style: TextStyle(fontSize: 16)),
+                          : Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ],
