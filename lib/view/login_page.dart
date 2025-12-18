@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/auth_service.dart';
 import '../model/user_model.dart';
+import 'container_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -31,10 +32,15 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login berhasil, ${user.name} 👋')),
-        );
-        // TODO: Navigator.pushReplacement(...)
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Login berhasil, ${user.name} 👋')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ContainerPage()),
+          );
+        }
       } else {
         setState(() {
           _errorMessage = 'Email atau password salah';
