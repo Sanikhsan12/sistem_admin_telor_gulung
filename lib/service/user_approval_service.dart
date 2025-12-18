@@ -10,23 +10,22 @@ class UserApprovalService {
     final token = await AuthService.getToken();
     return {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
   }
 
-  // ! Get Users Pending Approval
+  // ! Get Users Pending Approval (Tetap GET)
   Future<http.Response> fetchPendingApprovals() async {
-    // * Backend: GET /api/users?status=menunggu_approval
     final url = Uri.parse('$_baseUrl/users?status=menunggu_approval');
     final response = await http.get(url, headers: await _getHeaders());
     return response;
   }
 
-  // ! Approve User
+  // ! Approve User (Gunakan PATCH)
   Future<http.Response> approveUser(int userId) async {
-    // * Backend: PUT /api/users/{id}/status body: {status: approved}
     final url = Uri.parse('$_baseUrl/users/$userId/status');
-    final response = await http.put(
+    final response = await http.patch(
       url,
       headers: await _getHeaders(),
       body: jsonEncode({'status': 'approved'}),
@@ -34,10 +33,11 @@ class UserApprovalService {
     return response;
   }
 
-  // ! Reject User
+  // ! Reject User (Gunakan PATCH)
   Future<http.Response> rejectUser(int userId) async {
     final url = Uri.parse('$_baseUrl/users/$userId/status');
-    final response = await http.put(
+
+    final response = await http.patch(
       url,
       headers: await _getHeaders(),
       body: jsonEncode({'status': 'rejected'}),
