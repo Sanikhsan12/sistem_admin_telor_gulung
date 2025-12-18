@@ -23,6 +23,7 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
 
   // !  ambil data dari Service
   Future<void> _fetchData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
     try {
@@ -30,17 +31,19 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        setState(() {
-          _pendingUsers = body['data'] ?? [];
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _pendingUsers = body['data'] ?? [];
+            _isLoading = false;
+          });
+        }
       } else {
         _showSnackBar('Gagal mengambil data: ${response.statusCode}');
-        setState(() => _isLoading = false);
+        if (mounted) setState(() => _isLoading = false);
       }
     } catch (e) {
       _showSnackBar('Terjadi kesalahan: $e');
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -50,7 +53,7 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
       final response = await _service.approveUser(id);
       if (response.statusCode == 200) {
         _showSnackBar('User berhasil di-approve!', isError: false);
-        _fetchData(); // Refresh list
+        if (mounted) _fetchData(); // Refresh list
       } else {
         _showSnackBar('Gagal approve user');
       }
@@ -65,7 +68,7 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
       final response = await _service.rejectUser(id);
       if (response.statusCode == 200) {
         _showSnackBar('User telah ditolak/reject.', isError: true);
-        _fetchData(); // Refresh list
+        if (mounted) _fetchData(); // Refresh list
       } else {
         _showSnackBar('Gagal reject user');
       }
@@ -75,6 +78,7 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
   }
 
   void _showSnackBar(String message, {bool isError = true}) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
