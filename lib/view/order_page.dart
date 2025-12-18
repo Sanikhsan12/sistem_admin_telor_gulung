@@ -32,20 +32,27 @@ class _OrderPageState extends State<OrderPage> {
         final List data = body['data'];
 
         setState(() {
-          _orders = data.map((json) => OrderModel.fromJson(json)).toList();
+          _orders = data
+              .map((e) => OrderModel.fromJson(e))
+              .where((order) => order.status != 'dibatalkan')
+              .toList();
           _isLoading = false;
         });
       } else {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal load data: ${response.statusCode}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Gagal load data (${response.statusCode})')),
+          );
+        }
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 
@@ -57,8 +64,7 @@ class _OrderPageState extends State<OrderPage> {
     if (order.asin) toppings.add('Asin');
     if (order.barbeque) toppings.add('Barbeque');
 
-    if (toppings.isEmpty) return 'Original (Tanpa Topping)';
-    return toppings.join(', ');
+    return toppings.isEmpty ? 'Original (Tanpa Topping)' : toppings.join(', ');
   }
 
   Color _getStatusColor(String status) {
@@ -77,13 +83,14 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void _showUpdateStatusDialog(OrderModel order) {
-    String selectedStatus = order.status;
     final List<String> statuses = [
       'menunggu_antrian',
       'diproses',
       'selesai',
       'dibatalkan',
     ];
+
+    String selectedStatus = order.status.replaceAll(' ', '_');
 
     showDialog(
       context: context,
@@ -93,34 +100,26 @@ class _OrderPageState extends State<OrderPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Update status untuk pesanan #${order.id}?'),
+              Text('Update status pesanan #${order.id}?'),
               const SizedBox(height: 16),
-              StatefulBuilder(
-                builder: (context, setState) {
-                  return DropdownButtonFormField<String>(
-                    value: statuses.contains(selectedStatus)
-                        ? selectedStatus
-                        : statuses.first,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
+              DropdownButtonFormField<String>(
+                value: statuses.contains(selectedStatus)
+                    ? selectedStatus
+                    : statuses.first,
+                decoration: const InputDecoration(border: OutlineInputBorder()),
+                items: statuses.map((status) {
+                  return DropdownMenuItem<String>(
+                    value: status,
+                    child: Text(
+                      status.replaceAll('_', ' ').toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    items: statuses.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value.replaceAll('_', ' ').toUpperCase(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() => selectedStatus = newValue!);
-                    },
                   );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    selectedStatus = value;
+                  }
                 },
               ),
             ],
@@ -135,7 +134,7 @@ class _OrderPageState extends State<OrderPage> {
                 Navigator.pop(context);
                 await _processUpdateStatus(order.id, selectedStatus);
               },
-              child: const Text('Simpan Perubahan'),
+              child: const Text('Simpan'),
             ),
           ],
         );
@@ -143,39 +142,39 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Future<void> _processUpdateStatus(int id, String newStatus) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Mengupdate status...'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-
+  Future<void> _processUpdateStatus(int id, String status) async {
     try {
       final response = await _orderService.updateOrderStatus(
         orderId: id,
-        status: newStatus,
+        status: status,
       );
+
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Status berhasil diperbarui!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Status berhasil diperbarui'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
         _fetchOrders();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal update status'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Gagal update status'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 
@@ -184,14 +183,18 @@ class _OrderPageState extends State<OrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'kelola Pesanan',
+          'Daftar Pesanan',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _fetchOrders),
-        ],
-        centerTitle: true,
         backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            onPressed: _fetchOrders,
+          ),
+        ],
       ),
       backgroundColor: Colors.blue,
       body: _isLoading
@@ -201,32 +204,16 @@ class _OrderPageState extends State<OrderPage> {
               child: _orders.isEmpty
                   ? ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: [
-                        const SizedBox(height: 120),
-                        Column(
-                          children: [
-                            const Icon(
-                              Icons.inbox,
-                              size: 64,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Belum ada pesanan masuk',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Tarik ke bawah untuk refresh',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
+                      children: const [
+                        SizedBox(height: 120),
+                        Icon(Icons.inbox, size: 64, color: Colors.grey),
+                        SizedBox(height: 16),
+                        Center(
+                          child: Text(
+                            'Belum ada pesanan masuk\n(Order dibatalkan disembunyikan)',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white70),
+                          ),
                         ),
                       ],
                     )
@@ -238,7 +225,6 @@ class _OrderPageState extends State<OrderPage> {
                         final order = _orders[index];
 
                         return Card(
-                          elevation: 2,
                           margin: const EdgeInsets.only(bottom: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -249,8 +235,7 @@ class _OrderPageState extends State<OrderPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: Column(
@@ -261,16 +246,36 @@ class _OrderPageState extends State<OrderPage> {
                                             order.productName ??
                                                 'Unknown Product',
                                             style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
+                                          const SizedBox(height: 4),
                                           Text(
                                             'Order #${order.id}',
                                             style: TextStyle(
                                               color: Colors.grey[500],
                                               fontSize: 12,
                                             ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.person,
+                                                size: 14,
+                                                color: Colors.grey,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                order.userName ??
+                                                    'Unknown User',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -311,7 +316,7 @@ class _OrderPageState extends State<OrderPage> {
                                     Text('${order.total_barang} pcs'),
                                     const Spacer(),
                                     Text(
-                                      'Total: Rp ${order.total_harga}',
+                                      'Rp ${order.total_harga}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.green,
