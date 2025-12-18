@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: const Text(
           'Jadwal Sholat',
@@ -38,25 +39,38 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: _loadData,
+            icon: const Icon(Icons.refresh, color: Colors.white),
+          ),
+        ],
       ),
-      backgroundColor: Colors.blue,
       body: RefreshIndicator(
         onRefresh: _loadData,
         color: Colors.blue,
+        backgroundColor: Colors.white,
         child: FutureBuilder<Map<String, dynamic>?>(
           future: _jadwalData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              );
             }
 
-            // ! Logging eror
+            // ! Logging error
             if (snapshot.hasError) {
               return ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  const SizedBox(height: 100),
-                  Center(child: Text('Error: ${snapshot.error}')),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                  Center(
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               );
             }
@@ -65,11 +79,12 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.data == null) {
               return ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  SizedBox(height: 100),
-                  Center(
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                  const Center(
                     child: Text(
                       'Data kosong. Pastikan URL di .env sudah benar.',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -83,17 +98,44 @@ class _HomePageState extends State<HomePage> {
 
             return ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 10,
+              ),
               children: [
                 _buildHeader(data['lokasi'], jadwal.tanggal),
+                const SizedBox(height: 30),
+                // Grid Menu
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 1.3,
+                  children: [
+                    _buildSholatCard(
+                      'Imsak',
+                      jadwal.imsak,
+                      Icons.nightlight_round,
+                    ),
+                    _buildSholatCard('Subuh', jadwal.subuh, Icons.wb_twilight),
+                    _buildSholatCard(
+                      'Terbit',
+                      jadwal.terbit,
+                      Icons.wb_sunny_outlined,
+                    ),
+                    _buildSholatCard('Dzuhur', jadwal.dzuhur, Icons.wb_sunny),
+                    _buildSholatCard('Ashar', jadwal.ashar, Icons.cloud),
+                    _buildSholatCard(
+                      'Maghrib',
+                      jadwal.maghrib,
+                      Icons.wb_twilight,
+                    ),
+                    _buildSholatCard('Isya', jadwal.isya, Icons.nights_stay),
+                  ],
+                ),
                 const SizedBox(height: 20),
-                _buildSholatTile('Imsak', jadwal.imsak),
-                _buildSholatTile('Subuh', jadwal.subuh),
-                _buildSholatTile('Terbit', jadwal.terbit),
-                _buildSholatTile('Dzuhur', jadwal.dzuhur),
-                _buildSholatTile('Ashar', jadwal.ashar),
-                _buildSholatTile('Maghrib', jadwal.maghrib),
-                _buildSholatTile('Isya', jadwal.isya),
               ],
             );
           },
@@ -104,32 +146,65 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildHeader(String lokasi, String tanggal) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const Icon(Icons.location_on, color: Colors.white70, size: 40),
+        const SizedBox(height: 8),
         Text(
           lokasi,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1.2,
+          ),
         ),
-        Text(tanggal, style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+        const SizedBox(height: 4),
+        Text(
+          tanggal,
+          style: TextStyle(color: Colors.blue.shade100, fontSize: 16),
+        ),
       ],
     );
   }
 
-  Widget _buildSholatTile(String name, String time) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
-        trailing: Text(
-          time,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.teal,
-            fontWeight: FontWeight.bold,
+  Widget _buildSholatCard(String name, String time, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-        ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.blueAccent, size: 28),
+          const SizedBox(height: 8),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            time,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ],
       ),
     );
   }
