@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-// !
+// ! pages
 import './home_page.dart';
 import './product_page.dart';
 import './order_page.dart';
 import './user_approval_page.dart';
+import './about_page.dart';
 
 class ContainerPage extends StatefulWidget {
   const ContainerPage({super.key});
@@ -22,6 +23,7 @@ class _ContainerPageState extends State<ContainerPage> {
     ProductPage(),
     OrderPage(),
     UserApprovalPage(),
+    AboutPage(),
   ];
 
   @override
@@ -46,6 +48,7 @@ class _ContainerPageState extends State<ContainerPage> {
             size: 30,
             color: Colors.blue,
           ),
+          Icon(Icons.info_outline, size: 30, color: Colors.blue),
         ],
         onTap: (index) {
           setState(() {
