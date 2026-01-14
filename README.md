@@ -64,11 +64,15 @@ flutter run
 
 ### ⚙️ Konfigurasi
 
-Buat file `.env` di root project dengan konfigurasi berikut:
+Salin file `.env.example` menjadi `.env` dan sesuaikan konfigurasi:
+
+```bash
+cp .env.example .env
+```
 
 ```env
-BASE_URL=your_api_base_url
-API_KEY=your_api_key
+API_BASE_URL=your_api_base_url
+API_JADWAL_URL=your_api_jadwal_url
 ```
 
 ---
@@ -124,11 +128,15 @@ flutter run
 
 ### ⚙️ Configuration
 
-Create a `.env` file in the project root with the following configuration:
+Copy `.env.example` to `.env` and configure:
+
+```bash
+cp .env.example .env
+```
 
 ```env
-BASE_URL=your_api_base_url
-API_KEY=your_api_key
+API_BASE_URL=your_api_base_url
+API_JADWAL_URL=your_api_jadwal_url
 ```
 
 ---
@@ -184,11 +192,15 @@ flutter run
 
 ### ⚙️ 設定
 
-プロジェクトルートに以下の設定で `.env` ファイルを作成してください：
+`.env.example` を `.env` にコピーして設定してください：
+
+```bash
+cp .env.example .env
+```
 
 ```env
-BASE_URL=your_api_base_url
-API_KEY=your_api_key
+API_BASE_URL=your_api_base_url
+API_JADWAL_URL=your_api_jadwal_url
 ```
 
 ---
