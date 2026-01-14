@@ -6,6 +6,7 @@ import './home_page.dart';
 import './product_page.dart';
 import './order_page.dart';
 import './user_approval_page.dart';
+import './sales_graph_page.dart';
 import './about_page.dart';
 
 class ContainerPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ContainerPageState extends State<ContainerPage> {
     ProductPage(),
     OrderPage(),
     UserApprovalPage(),
+    SalesGraphPage(),
     AboutPage(),
   ];
 
@@ -48,6 +50,7 @@ class _ContainerPageState extends State<ContainerPage> {
             size: 30,
             color: Colors.blue,
           ),
+          Icon(Icons.bar_chart, size: 30, color: Colors.blue),
           Icon(Icons.info_outline, size: 30, color: Colors.blue),
         ],
         onTap: (index) {

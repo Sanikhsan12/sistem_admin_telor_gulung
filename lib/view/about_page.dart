@@ -3,12 +3,21 @@ import 'package:flutter/material.dart';
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
+  // Data pengembang aplikasi
+  static const List<Map<String, String>> _developers = [
+    {'name': 'Muhammad Ikhsan', 'nim': '152022001'},
+    {'name': 'Muhammad Usri Yusron', 'nim': '152022132'},
+    {'name': 'Muhammad Yazid', 'nim': '152022192'},
+    {'name': 'Budi Amin', 'nim': '152022213'},
+    {'name': 'Ahmad Faoyan', 'nim': '152024601'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Informasi API & Endpoint",
+          "Tim Pengembang",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
@@ -19,164 +28,132 @@ class AboutPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          const Card(
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Text(
-                "Base URL : https://backendsistemtelorgulung-production.up.railway.app/api \n\n Jadwal Sholat Base URL : https://api.myquran.com/v2/sholat",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+          // Header
+          const Center(
+            child: Column(
+              children: [
+                Icon(Icons.group, color: Colors.white, size: 48),
+                SizedBox(height: 8),
+                Text(
+                  'Sistem Admin Telor Gulung',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+                SizedBox(height: 4),
+                Text(
+                  'Dikembangkan oleh:',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
-          // 1. Auth Service
-          _buildServiceSection("Auth Service", Icons.lock, [
-            _Endpoint("POST", "/register", "Registrasi user baru"),
-            _Endpoint("POST", "/login", "Login & mendapatkan Token"),
-          ]),
+          // Developer Cards
+          ..._developers.map((dev) => _buildDeveloperCard(dev)),
 
-          // 2. Product Service
-          _buildServiceSection("Product Service", Icons.shopping_bag, [
-            _Endpoint("GET", "/products", "Mengambil semua data produk"),
-            _Endpoint("POST", "/products", "Tambah produk (Multipart)"),
-            _Endpoint(
-              "POST",
-              "/products/{id}",
-              "Update produk (Method: PUT via POST)",
-            ),
-            _Endpoint("DELETE", "/products/{id}", "Hapus produk"),
-          ]),
+          const SizedBox(height: 24),
 
-          // 3. Order Service
-          _buildServiceSection("Order Service", Icons.shopping_cart, [
-            _Endpoint("GET", "/orders", "List order (Filter: ?status=...)"),
-            _Endpoint("GET", "/orders/{id}", "Detail order berdasarkan ID"),
-            _Endpoint("PUT", "/orders/{id}/status", "Update status order"),
-          ]),
-
-          // 4. User Approval Service
-          _buildServiceSection("User Approval Service", Icons.verified_user, [
-            _Endpoint(
-              "GET",
-              "/users?status=menunggu_approval",
-              "List user pending",
-            ),
-            _Endpoint(
-              "PATCH",
-              "/users/{id}/status",
-              "Approve user (status: approved)",
-            ),
-            _Endpoint(
-              "PATCH",
-              "/users/{id}/status",
-              "Reject user (status: rejected)",
-            ),
-          ]),
-
-          // 5. Jadwal Sholat Service
-          _buildServiceSection("Jadwal Sholat Service", Icons.mosque, [
-            _Endpoint(
-              "GET",
-              "/jadwal/{idLokasi}/{datePath}",
-              "Mengambil jadwal sholat eksternal",
-            ),
-          ]),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceSection(
-    String title,
-    IconData icon,
-    List<_Endpoint> endpoints,
-  ) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ExpansionTile(
-        leading: Icon(icon, color: Colors.blue),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        children: endpoints.map((e) => _buildEndpointItem(e)).toList(),
-      ),
-    );
-  }
-
-  Widget _buildEndpointItem(_Endpoint endpoint) {
-    Color methodColor;
-    switch (endpoint.method) {
-      case "GET":
-        methodColor = Colors.blue;
-        break;
-      case "POST":
-        methodColor = Colors.green;
-        break;
-      case "PUT":
-      case "PATCH":
-        methodColor = Colors.orange;
-        break;
-      case "DELETE":
-        methodColor = Colors.red;
-        break;
-      default:
-        methodColor = Colors.grey;
-    }
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      title: Row(
-        children: [
+          // YouTube Demo Button
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: methodColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: methodColor),
-            ),
-            child: Text(
-              endpoint.method,
-              style: TextStyle(
-                color: methodColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                // TODO: Implementasi buka link YouTube
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Link video demo akan ditambahkan nanti'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.play_circle_fill, color: Colors.red),
+              label: const Text(
+                'Tonton Video Demo',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black87,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3,
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              endpoint.path,
-              style: const TextStyle(
-                fontFamily: 'monospace',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          const SizedBox(height: 100), // Extra padding for bottom navbar
         ],
-      ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(top: 4.0),
-        child: Text(endpoint.description),
       ),
     );
   }
-}
 
-// Model sederhana untuk endpoint
-class _Endpoint {
-  final String method;
-  final String path;
-  final String description;
-
-  _Endpoint(this.method, this.path, this.description);
+  Widget _buildDeveloperCard(Map<String, String> developer) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            // Avatar Placeholder
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.blue.shade100,
+              child: Icon(
+                Icons.person,
+                size: 32,
+                color: Colors.blue.shade700,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    developer['name'] ?? '',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'NIM: ${developer['nim']}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue.shade700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
