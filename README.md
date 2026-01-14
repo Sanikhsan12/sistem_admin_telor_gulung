@@ -27,8 +27,8 @@
 | 📦 **Manajemen Pesanan**    | Kelola pesanan pelanggan dengan status tracking           |
 | 🍳 **Manajemen Produk**     | Tambah, edit, dan hapus produk dengan gambar              |
 | 👥 **Persetujuan Pengguna** | Sistem approval untuk pengguna baru                       |
-| 📊 **Grafik Penjualan**     | Visualisasi data penjualan untuk analisis bisnis          |
-| ℹ️ **Tentang Kami**         | Informasi tim pengembang aplikasi                         |
+| 📊 **Grafik Penjualan**     | Chart modern (Line, Bar, Pie) dengan animasi interaktif   |
+| ℹ️ **Tentang Kami**         | Informasi tim pengembang dengan foto profil               |
 
 ### 🛠️ Teknologi yang Digunakan
 
@@ -38,7 +38,10 @@
 - **HTTP Client**: http package
 - **Local Storage**: shared_preferences
 - **Navigation**: curved_navigation_bar
+- **Charts**: fl_chart (Line, Bar, Pie chart)
+- **Image Picker**: image_picker
 - **Environment**: flutter_dotenv
+- **Date Formatting**: intl
 
 ### 📱 Instalasi
 
@@ -78,14 +81,14 @@ API_KEY=your_api_key
 
 ### ✨ Key Features
 
-| Feature                   | Description                                    |
-| ------------------------- | ---------------------------------------------- |
-| 🕌 **Prayer Schedule**    | Displays daily prayer times based on location  |
-| 📦 **Order Management**   | Manage customer orders with status tracking    |
-| 🍳 **Product Management** | Add, edit, and delete products with images     |
-| 👥 **User Approval**      | Approval system for new users                  |
-| 📊 **Sales Graph**        | Sales data visualization for business analysis |
-| ℹ️ **About Us**           | Application developer team information         |
+| Feature                   | Description                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| 🕌 **Prayer Schedule**    | Displays daily prayer times based on location              |
+| 📦 **Order Management**   | Manage customer orders with status tracking                |
+| 🍳 **Product Management** | Add, edit, and delete products with images                 |
+| 👥 **User Approval**      | Approval system for new users                              |
+| 📊 **Sales Graph**        | Modern charts (Line, Bar, Pie) with interactive animations |
+| ℹ️ **About Us**           | Developer team info with profile photos                    |
 
 ### 🛠️ Technologies Used
 
@@ -95,7 +98,10 @@ API_KEY=your_api_key
 - **HTTP Client**: http package
 - **Local Storage**: shared_preferences
 - **Navigation**: curved_navigation_bar
+- **Charts**: fl_chart (Line, Bar, Pie chart)
+- **Image Picker**: image_picker
 - **Environment**: flutter_dotenv
+- **Date Formatting**: intl
 
 ### 📱 Installation
 
@@ -135,14 +141,14 @@ API_KEY=your_api_key
 
 ### ✨ 主な機能
 
-| 機能                    | 説明                                 |
-| ----------------------- | ------------------------------------ |
-| 🕌 **礼拝スケジュール** | 場所に基づいた毎日の礼拝時間を表示   |
-| 📦 **注文管理**         | ステータス追跡付きで顧客注文を管理   |
-| 🍳 **製品管理**         | 画像付きで製品を追加、編集、削除     |
-| 👥 **ユーザー承認**     | 新規ユーザーの承認システム           |
-| 📊 **売上グラフ**       | ビジネス分析のための売上データ可視化 |
-| ℹ️ **私たちについて**   | アプリケーション開発チームの情報     |
+| 機能                    | 説明                                                               |
+| ----------------------- | ------------------------------------------------------------------ |
+| 🕌 **礼拝スケジュール** | 場所に基づいた毎日の礼拝時間を表示                                 |
+| 📦 **注文管理**         | ステータス追跡付きで顧客注文を管理                                 |
+| 🍳 **製品管理**         | 画像付きで製品を追加、編集、削除                                   |
+| 👥 **ユーザー承認**     | 新規ユーザーの承認システム                                         |
+| 📊 **売上グラフ**       | モダンなチャート（折れ線、棒、円）とインタラクティブアニメーション |
+| ℹ️ **私たちについて**   | プロフィール写真付き開発チーム情報                                 |
 
 ### 🛠️ 使用技術
 
@@ -152,7 +158,10 @@ API_KEY=your_api_key
 - **HTTP クライアント**: http パッケージ
 - **ローカルストレージ**: shared_preferences
 - **ナビゲーション**: curved_navigation_bar
+- **チャート**: fl_chart（折れ線、棒、円グラフ）
+- **画像選択**: image_picker
 - **環境設定**: flutter_dotenv
+- **日付フォーマット**: intl
 
 ### 📱 インストール
 
@@ -210,6 +219,35 @@ lib/
     ├── sales_graph_page.dart
     ├── splash_screen_page.dart
     └── user_approval_page.dart
+
+assets/
+└── images/                   # Gambar & foto developer
+    ├── launcher_icon.png
+    ├── ikhsan.jpg
+    ├── budi.jpg
+    └── faoyan.jpg
+```
+
+---
+
+## 📦 Dependencies
+
+```yaml
+dependencies:
+  flutter: sdk
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  flutter_dotenv: ^6.0.0
+  intl: ^0.20.2
+  shared_preferences: ^2.2.0
+  loading_animation_widget: ^1.3.0
+  curved_navigation_bar: ^1.0.6
+  image_picker: ^1.2.1
+  fl_chart: ^0.69.0
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^5.0.0
 ```
 
 ---
@@ -219,6 +257,7 @@ lib/
 <table>
   <tr>
     <td align="center">
+      <img src="assets/images/ikhsan.jpg" width="80" style="border-radius:50%"><br>
       <strong>Muhammad Ikhsan</strong><br>
       <sub>NIM: 152022001</sub>
     </td>
@@ -233,10 +272,12 @@ lib/
   </tr>
   <tr>
     <td align="center">
+      <img src="assets/images/budi.jpg" width="80" style="border-radius:50%"><br>
       <strong>Budi Amin</strong><br>
       <sub>NIM: 152022213</sub>
     </td>
     <td align="center">
+      <img src="assets/images/faoyan.jpg" width="80" style="border-radius:50%"><br>
       <strong>Ahmad Faoyan</strong><br>
       <sub>NIM: 152024601</sub>
     </td>
