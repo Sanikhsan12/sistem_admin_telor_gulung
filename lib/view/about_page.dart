@@ -5,11 +5,23 @@ class AboutPage extends StatelessWidget {
 
   // Data pengembang aplikasi
   static const List<Map<String, String>> _developers = [
-    {'name': 'Muhammad Ikhsan', 'nim': '152022001'},
-    {'name': 'Muhammad Usri Yusron', 'nim': '152022132'},
-    {'name': 'Muhammad Yazid', 'nim': '152022192'},
-    {'name': 'Budi Amin', 'nim': '152022213'},
-    {'name': 'Ahmad Faoyan', 'nim': '152024601'},
+    {
+      'name': 'Muhammad Ikhsan',
+      'nim': '152022001',
+      'photo': 'assets/images/ikhsan.jpg',
+    },
+    {'name': 'Muhammad Usri Yusron', 'nim': '152022132', 'photo': ''},
+    {'name': 'Muhammad Yazid', 'nim': '152022192', 'photo': ''},
+    {
+      'name': 'Budi Amin',
+      'nim': '152022213',
+      'photo': 'assets/images/budi.jpg',
+    },
+    {
+      'name': 'Ahmad Faoyan',
+      'nim': '152024601',
+      'photo': 'assets/images/faoyan.jpg',
+    },
   ];
 
   @override
@@ -24,7 +36,7 @@ class AboutPage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xFF1565C0),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -74,10 +86,7 @@ class AboutPage extends StatelessWidget {
               icon: const Icon(Icons.play_circle_fill, color: Colors.red),
               label: const Text(
                 'Tonton Video Demo',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -97,6 +106,9 @@ class AboutPage extends StatelessWidget {
   }
 
   Widget _buildDeveloperCard(Map<String, String> developer) {
+    String? photoPath = developer['photo'];
+    bool hasPhoto = photoPath != null && photoPath.isNotEmpty;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 3,
@@ -105,15 +117,14 @@ class AboutPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            // Avatar Placeholder
+            // Avatar dengan foto atau placeholder
             CircleAvatar(
               radius: 30,
               backgroundColor: Colors.blue.shade100,
-              child: Icon(
-                Icons.person,
-                size: 32,
-                color: Colors.blue.shade700,
-              ),
+              backgroundImage: hasPhoto ? AssetImage(photoPath) : null,
+              child: hasPhoto
+                  ? null
+                  : Icon(Icons.person, size: 32, color: Colors.blue.shade700),
             ),
             const SizedBox(width: 16),
             // Info

@@ -100,7 +100,7 @@ class _UserApprovalPageState extends State<UserApprovalPage> {
         elevation: 0,
         centerTitle: true,
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xFF1565C0),
       body: RefreshIndicator(
         onRefresh: _fetchData,
         child: _isLoading

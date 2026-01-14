@@ -196,7 +196,7 @@ class _OrderPageState extends State<OrderPage> {
           ),
         ],
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xFF1565C0),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
