@@ -97,7 +97,7 @@ class _ProductPageState extends State<ProductPage> {
         elevation: 0,
         centerTitle: true,
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xFF1565C0),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 80.0),
         child: FloatingActionButton(
