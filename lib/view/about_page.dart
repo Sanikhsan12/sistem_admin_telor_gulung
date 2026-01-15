@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -10,8 +11,16 @@ class AboutPage extends StatelessWidget {
       'nim': '152022001',
       'photo': 'assets/images/ikhsan.jpg',
     },
-    {'name': 'Muhammad Usri Yusron', 'nim': '152022132', 'photo': ''},
-    {'name': 'Muhammad Yazid', 'nim': '152022192', 'photo': ''},
+    {
+      'name': 'Muhammad Usri Yusron',
+      'nim': '152022132',
+      'photo': 'assets/images/yusron.jpg',
+    },
+    {
+      'name': 'Muhammad Yazid',
+      'nim': '152022192',
+      'photo': 'assets/images/yazid.jpg',
+    },
     {
       'name': 'Budi Amin',
       'nim': '152022213',
@@ -74,14 +83,22 @@ class AboutPage extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton.icon(
-              onPressed: () {
-                // TODO: Implementasi buka link YouTube
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Link video demo akan ditambahkan nanti'),
-                    backgroundColor: Colors.orange,
-                  ),
-                );
+              onPressed: () async {
+                const youtubeUrl =
+                    'https://www.youtube.com/watch?v=xhXOB7wXpp4';
+                final uri = Uri.parse(youtubeUrl);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Tidak dapat membuka link YouTube'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
               },
               icon: const Icon(Icons.play_circle_fill, color: Colors.red),
               label: const Text(
