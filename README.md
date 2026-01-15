@@ -274,10 +274,12 @@ dev_dependencies:
       <sub>NIM: 152022001</sub>
     </td>
     <td align="center">
+      <img src="assets/images/yusron.jpg" width="80" style="border-radius:50%"><br>
       <strong>Muhammad Usri Yusron</strong><br>
       <sub>NIM: 152022132</sub>
     </td>
     <td align="center">
+      <img src="assets/images/yazid.jpg" width="80" style="border-radius:50%"><br>
       <strong>Muhammad Yazid</strong><br>
       <sub>NIM: 152022192</sub>
     </td>
